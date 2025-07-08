@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta de Modernização da Frota Municipal - GX Track</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+            color: #374151;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        @media (min-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+        }
+        .header-section {
+            background: linear-gradient(135deg, #00429d 0%, #1e40af 100%);
+            color: #ffffff;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        @media (min-width: 768px) {
+            .header-section {
+                padding: 4rem 2rem;
+            }
+        }
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #00429d;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 2.5rem;
+            }
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #00429d, #1e40af);
+            border-radius: 2px;
+        }
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #4771b2;
+            margin-bottom: 1rem;
+            border-left: 4px solid #00429d;
+            padding-left: 1rem;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        @media (min-width: 768px) {
+            .subsection-title {
+                font-size: 1.75rem;
+            }
+        }
+        .card {
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 66, 157, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            word-wrap: break-word;
+        }
+        @media (min-width: 768px) {
+            .card {
+                padding: 2.5rem;
+            }
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .material-card {
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 66, 157, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            word-wrap: break-word;
+        }
+        .material-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .brand-text {
+            color: #00429d;
+        }
+        .list-item {
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 66, 157, 0.1);
+            word-wrap: break-word;
+        }
+        .list-item:last-child {
+            border-bottom: none;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            margin-top: 2rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            padding: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                padding: 1rem;
+            }
+        }
+        .footer-section {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 3rem;
+            border-top: 2px solid #e5e7eb;
+            color: #6b7280;
+            background: #ffffff;
+            border-radius: 1rem;
+        }
+        @media (min-width: 768px) {
+            .footer-section {
+                padding: 3rem 2rem;
+            }
+        }
+        .logo {
+            max-width: 180px;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            transition: all 0.3s ease;
+        }
+        @media (min-width: 768px) {
+            .logo {
+                max-width: 220px;
+            }
+        }
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .highlight-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 2px solid #10b981;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        @media (min-width: 768px) {
+            .highlight-box {
+                padding: 1.5rem;
+            }
+        }
+        .warning-box {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid #ef4444;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            word-wrap: break-word;
+        }
+        @media (min-width: 768px) {
+            .warning-box {
+                padding: 1.5rem;
+            }
+        }
+        .benefit-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 0.75rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+        table {
+            border-collapse: collapse;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            font-size: 0.875rem;
+        }
+        @media (min-width: 768px) {
+            table {
+                font-size: 1rem;
+            }
+        }
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+            word-wrap: break-word;
+        }
+        @media (min-width: 768px) {
+            th, td {
+                padding: 0.75rem 1rem;
+            }
+        }
+        th {
+            background: linear-gradient(135deg, #00429d 0%, #1e40af 100%);
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+        tr:hover {
+            background-color: #e2e8f0;
+        }
+        .cta-button {
+            background: linear-gradient(135deg, #00429d 0%, #1e40af 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0.5rem 0.25rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+        @media (min-width: 768px) {
+            .cta-button {
+                padding: 1rem 2rem;
+                margin: 1rem 0.5rem;
+            }
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        /* Responsividade para títulos */
+        h1 {
+            font-size: 1.875rem;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 3rem;
+            }
+        }
+        h2 {
+            font-size: 1.5rem;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        @media (min-width: 768px) {
+            h2 {
+                font-size: 1.875rem;
+            }
+        }
+        h3 {
+            font-size: 1.25rem;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        @media (min-width: 768px) {
+            h3 {
+                font-size: 1.5rem;
+            }
+        }
+        /* Responsividade para parágrafos */
+        p {
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        /* Responsividade para listas */
+        ul, ol {
+            word-wrap: break-word;
+        }
+        li {
+            word-wrap: break-word;
+            hyphens: auto;
+        }
+        /* Acessibilidade */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        /* Melhor contraste para acessibilidade */
+        .text-gray-600 {
+            color: #4b5563 !important;
+        }
+        .text-gray-500 {
+            color: #6b7280 !important;
+        }
+        /* Foco para acessibilidade */
+        a:focus, button:focus {
+            outline: 2px solid #00429d;
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <!-- 1. CAPA PROFISSIONAL -->
+        <section id="capa" class="header-section">
+            <img src="./logo.svg" alt="Logo GX Track" class="logo mx-auto">
+            <h1 class="text-3xl md:text-5xl font-extrabold mb-4">Proposta de Modernização da Frota Municipal</h1>
+            <h2 class="text-xl md:text-3xl font-semibold mb-6">Solução Completa de Rastreamento e Videotelemetria</h2>
+            <p class="text-lg md:text-2xl font-medium">Cliente: Prefeitura Jandaia/GO</p>
+            <p class="text-base md:text-xl mt-2">Data: 14/07/2025</p>
+        </section>
+
+        <main>
+            <!-- 2. APRESENTAÇÃO INSTITUCIONAL GX TRACK -->
+            <section id="apresentacao-institucional" class="card">
+                <h2 class="section-title">Apresentação Institucional GX Track</h2>
+                <p class="mb-4">A GX Track possui <strong>5 anos de experiência</strong> no mercado de rastreamento veicular e gestão de frotas, com foco em soluções para o setor público. Com <strong>+30 clientes satisfeitos</strong> e <strong>+140 veículos sob monitoramento</strong>, somos referência em Bahia, Sergipe e Goiás, com cobertura nacional.</p>
+                <p>Nossa plataforma opera <strong>24h/7 dias por semana</strong>, com suporte em qualquer horário e relatórios completos. Nosso diferencial são as câmeras para veículos escolares com histórico em nuvem, garantindo excelência e segurança.</p>
+            </section>
+
+            <!-- 3. DIAGNÓSTICO DAS NECESSIDADES -->
+            <section id="diagnostico-necessidades" class="card">
+                <h2 class="section-title">Diagnóstico das Necessidades</h2>
+                <p class="mb-4">A gestão de frotas municipais enfrenta desafios como falta de controle, ausência de dados precisos e dificuldade em garantir a transparência. Isso impacta a eficiência dos serviços e a utilização dos recursos públicos.</p>
+                <p>Uma gestão ineficiente gera altos custos com combustível e manutenção, baixa produtividade e insatisfação popular. A solução GX Track transforma essa realidade, promovendo eficiência e responsabilidade.</p>
+            </section>
+
+            <!-- 4. SOLUÇÃO TÉCNICA PROPOSTA -->
+            <section id="solucao-tecnica" class="card">
+                <h2 class="section-title">Solução Técnica Proposta</h2>
+                <p class="mb-4">A GX Track propõe uma solução integrada para a frota municipal de <strong>59 veículos</strong>, garantindo monitoramento completo, segurança avançada e otimização operacional através das seguintes tecnologias:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                    <div class="card p-4 text-center">
+                        <h3 class="subsection-title text-lg md:text-xl">Videotelemetria com IA (ADAS/DMS)</h3>
+                        <p>Câmeras e IA para monitorar comportamento do motorista e ambiente, prevenindo acidentes e identificando riscos. Ideal para veículos críticos.</p>
+                    </div>
+
+                    <div class="card p-4 text-center">
+                        <h3 class="subsection-title text-lg md:text-xl">Sistema RFID</h3>
+                        <p>Identificação por radiofrequência para atribuir viagens e eventos ao motorista, promovendo responsabilidade e controle.</p>
+                    </div>
+
+                    <div class="card p-4 text-center">
+                        <h3 class="subsection-title text-lg md:text-xl">Plataforma de Gestão 24/7</h3>
+                        <p>Acesso contínuo a uma plataforma intuitiva e robusta, com relatórios detalhados, histórico de rotas e alertas em tempo real.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. ANÁLISE DA FROTA MUNICIPAL -->
+            <section id="fleet-distribution" class="mb-12 material-card p-4 md:p-8">
+                <h2 class="text-xl md:text-2xl font-bold brand-text mb-2 text-center">Análise da Frota Municipal</h2>
+                <p class="text-center text-gray-600 mb-6 max-w-3xl mx-auto">A solução abrange 59 veículos distribuídos em diversos departamentos, cada um com necessidades específicas. Nosso plano visa atender a todas as secretarias, otimizando a gestão de forma centralizada.</p>
+                <div class="chart-container" style="height: 400px; max-height: 500px;">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </section>
+
+            <!-- 6. BENEFÍCIOS QUANTIFICADOS -->
+            <section id="beneficios-quantificados" class="card">
+                <h2 class="section-title">Benefícios Quantificados para a Frota Municipal (59 Veículos)</h2>
+                <p class="mb-4">A solução GX Track gera economia e eficiência mensuráveis para a gestão pública. Confira os benefícios quantificados para a frota de 59 veículos:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                    <div class="card p-4 text-center">
+                        <img src="./combustivel.svg" alt="Ícone de Combustível" class="benefit-icon mx-auto mb-2">
+                        <h3 class="subsection-title text-lg md:text-xl">Redução de Combustível</h3>
+                        <p class="text-lg font-bold text-green-600">15-25%</p>
+                        <p class="text-sm text-gray-600">(R$ 3.000 - R$ 5.000/mês)</p>
+                    </div>
+                    <div class="card p-4 text-center">
+                        <img src="./manutencao.svg" alt="Ícone de Manutenção" class="benefit-icon mx-auto mb-2">
+                        <h3 class="subsection-title text-lg md:text-xl">Redução de Manutenção</h3>
+                        <p class="text-lg font-bold text-green-600">20-30%</p>
+                        <p class="text-sm text-gray-600">(R$ 2.500 - R$ 4.000/mês)</p>
+                    </div>
+                    <div class="card p-4 text-center">
+                        <img src="./acidente.svg" alt="Ícone de Acidentes" class="benefit-icon mx-auto mb-2">
+                        <h3 class="subsection-title text-lg md:text-xl">Redução de Acidentes</h3>
+                        <p class="text-lg font-bold text-green-600">25-40%</p>
+                        <p class="text-sm text-gray-600">(Minimizando custos com reparos e seguros)</p>
+                    </div>
+                    <div class="card p-4 text-center">
+                        <img src="./produtividade.svg" alt="Ícone de Produtividade" class="benefit-icon mx-auto mb-2">
+                        <h3 class="subsection-title text-lg md:text-xl">Aumento de Produtividade</h3>
+                        <p class="text-lg font-bold text-green-600">15-20%</p>
+                        <p class="text-sm text-gray-600">(R$ 2.500 - R$ 3.500/mês)</p>
+                    </div>
+                    <div class="card p-4 text-center">
+                        <img src="./otimizacao de rotas.svg" alt="Ícone de Rotas" class="benefit-icon mx-auto mb-2">
+                        <h3 class="subsection-title text-lg md:text-xl">Otimização de Rotas</h3>
+                        <p class="text-lg font-bold text-green-600">Maior Eficiência</p>
+                        <p class="text-sm text-gray-600">(Redução do tempo de deslocamento)</p>
+                    </div>
+                    <div class="card p-4 text-center">
+                        <img src="./transparencia.svg" alt="Ícone de Transparência" class="benefit-icon mx-auto mb-2">
+                        <h3 class="subsection-title text-lg md:text-xl">Transparência</h3>
+                        <p class="text-lg font-bold text-green-600">Maior Prestação de Contas</p>
+                        <p class="text-sm text-gray-600">(Uso dos recursos públicos)</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <p class="text-base md:text-lg font-bold text-center mb-4">Economia Total Mensal Estimada: <span class="text-green-600">R$ 8.000 - R$ 12.500</span></p>
+                    <p class="text-base md:text-lg font-bold text-center">Retorno sobre Investimento (ROI) Projetado: <span class="text-green-600">6-12 meses</span></p>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="roiChart"></canvas>
+                </div>
+            </section>
+
+            <!-- 7. CASES DE SUCESSO -->
+            <section id="cases-sucesso" class="card">
+                <h2 class="section-title">Cases de Sucesso</h2>
+                <p class="mb-4">A GX Track tem um histórico comprovado de sucesso na implementação de soluções de gestão de frotas. Conheça alguns de nossos cases reais:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-blue-50 p-6 rounded-lg shadow-sm">
+                        <h3 class="subsection-title">ZB Transportes Logística</h3>
+                        <ul class="list-disc pl-5">
+                            <li class="list-item">Empresa de transporte de granel de cimento (BA/SE/AL/GO)</li>
+                            <li class="list-item">3 filiais, frota de +60 veículos</li>
+                            <li class="list-item">+20 funcionários utilizando a plataforma</li>
+                            <li class="list-item"><strong>Foco:</strong> rastreamento com telemetria, relatórios avançados e RFID para monitoramento de veículos e entregas.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 p-6 rounded-lg shadow-sm">
+                        <h3 class="subsection-title">DSO</h3>
+                        <ul class="list-disc pl-5">
+                            <li class="list-item">Empresa que atua como distribuidora de materiais de construção, com foco em marcas líderes do mercado.</li>
+                            <li class="list-item">Frota de 5 veículos para cada representante</li>
+                            <li class="list-item"><strong>Resultados:</strong> acompanhamento de rotas, trajetos e visitas aos clientes.</li>
+                            <li class="list-item"><strong>Foco:</strong> rastreamento básico com relatórios e RFID.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. CRONOGRAMA DETALHADO -->
+            <section id="cronograma" class="card">
+                <h2 class="section-title">Cronograma Detalhado de Implementação</h2>
+                <p class="mb-4">Nosso plano de implementação garante uma transição suave e eficiente, minimizando interrupções nas operações da frota municipal. Prazo total: <strong>45 dias úteis</strong>.</p>
+                <ol class="list-decimal pl-5">
+                    <li class="list-item"><strong>Semana 1-2: Planejamento e Mapeamento</strong><br>Reuniões iniciais, levantamento detalhado da frota, definição de objetivos e personalização da plataforma.</li>
+                    <li class="list-item"><strong>Semana 3-4: Instalação dos Equipamentos</strong><br>Instalação dos dispositivos de rastreamento, RFID e câmeras nos veículos, realizada por equipe técnica especializada.</li>
+                    <li class="list-item"><strong>Semana 5: Configuração e Testes</strong><br>Configuração final da plataforma, testes de funcionamento de todos os equipamentos e validação dos dados.</li>
+                    <li class="list-item"><strong>Semana 6: Treinamento e Go-Live</strong><br>Treinamento completo para a equipe de gestão e motoristas, seguido do início oficial das operações com a solução GX Track.</li>
+                </ol>
+            </section>
+
+            <!-- 9. INVESTIMENTO E CONDIÇÕES -->
+            <section id="investimento-condicoes" class="card">
+                <h2 class="section-title">Investimento e Condições</h2>
+                <p class="mb-4">A modernização da frota municipal é um investimento estratégico com retornos significativos. Confira a estrutura de investimento para a solução proposta:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h3 class="subsection-title">Investimento Inicial</h3>
+                        <p class="text-2xl md:text-3xl font-bold text-blue-800">R$ 26.267,80</p>
+                        <p class="text-gray-600">Valor único para aquisição e instalação dos equipamentos.</p>
+                    </div>
+                    <div>
+                        <h3 class="subsection-title">Investimento Mensal</h3>
+                        <p class="text-2xl md:text-3xl font-bold text-blue-800">R$ 4.806,40</p>
+                        <p class="text-gray-600">Valor recorrente para uso da plataforma, suporte e manutenção.</p>
+                    </div>
+                </div>
+
+                <h3 class="subsection-title">Detalhes do Investimento por Plano</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b text-left">Plano</th>
+                                <th class="py-2 px-4 border-b text-left">Instalação (R$)</th>
+                                <th class="py-2 px-4 border-b text-left">Mensalidade (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Rastreador Básico</td>
+                                <td class="py-2 px-4 border-b">229,80</td>
+                                <td class="py-2 px-4 border-b">59,90</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Rastreador + RFID</td>
+                                <td class="py-2 px-4 border-b">725,00</td>
+                                <td class="py-2 px-4 border-b">70,00</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Rastreador + RFID + Câmera</td>
+                                <td class="py-2 px-4 border-b">890,00</td>
+                                <td class="py-2 px-4 border-b">200,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="subsection-title">Totais por Plano</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm mb-6">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 border-b text-left">Plano</th>
+                                <th class="py-2 px-4 border-b text-left">1º Mês (R$)</th>
+                                <th class="py-2 px-4 border-b text-left">Demais Meses (R$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Rastreador Básico (36 veículos)</td>
+                                <td class="py-2 px-4 border-b">8.272,80</td>
+                                <td class="py-2 px-4 border-b">2.156,40</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Rastreador + RFID (15 veículos)</td>
+                                <td class="py-2 px-4 border-b">10.875,00</td>
+                                <td class="py-2 px-4 border-b">1.050,00</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2 px-4 border-b">Rastreador + RFID + Câmera (8 veículos)</td>
+                                <td class="py-2 px-4 border-b">7.120,00</td>
+                                <td class="py-2 px-4 border-b">1.600,00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mb-4">A economia gerada pela otimização da frota e redução de custos operacionais (combustível, manutenção, acidentes) superará rapidamente o investimento inicial e mensal, proporcionando um retorno financeiro positivo para o município.</p>
+                <div class="warning-box">
+                    <p class="text-center text-base md:text-lg font-bold text-red-600">Não perca os benefícios que sua gestão pode ter. Cada mês sem a solução GX Track representa uma perda de R$ 8.000 a R$ 12.500 em economia potencial.</p>
+                </div>
+            </section>
+
+            <!-- 10. PRÓXIMOS PASSOS -->
+            <section id="proximos-passos" class="card">
+                <h2 class="section-title">Próximos Passos</h2>
+                <p class="mb-4">Estamos prontos para iniciar a transformação da gestão da frota municipal. Para dar o próximo passo, convidamos você a:</p>
+                <ul class="list-disc pl-5 mb-4">
+                    <li class="list-item"><strong>Agendar uma Reunião:</strong> Para detalharmos a proposta, esclarecer dúvidas e apresentar uma demonstração personalizada da plataforma.</li>
+                    <li class="list-item"><strong>Aprovar a Proposta:</strong> Formalize seu interesse para darmos início ao processo de implementação.</li>
+                </ul>
+                <p class="text-center text-base md:text-lg font-bold mt-6">Entre em contato conosco hoje mesmo e comece a economizar!</p>
+                <p class="text-center text-base md:text-lg font-bold text-blue-800">📧 gxtrack1@gmail.com | 📞 (71) 99915-8665</p>
+            </section>
+        </main>
+
+        <footer class="footer-section">
+            <p>&copy; 2025 GX Track. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Configurações e funções auxiliares para gráficos
+        const FONT_COLOR = '#374151'; 
+        const GRID_COLOR = '#e5e7eb'; 
+        const PALETTE = {
+            blue_deep: '#00429d',
+            blue_medium: '#4771b2',
+            blue_light: '#73a2c6',
+            teal_light: '#a6d3d8',
+            cyan_pale: '#e1ffff'
+        };
+
+        const tooltipPlugin = {
+            tooltip: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                titleFont: {
+                    size: 14,
+                    weight: 'bold'
+                },
+                bodyFont: {
+                    size: 12
+                },
+                padding: 10,
+                cornerRadius: 4,
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            }
+        };
+        
+        function wrapLabel(label, maxWidth = 20) {
+            if (label.length <= maxWidth) {
+                return label;
+            }
+            const words = label.split(' ');
+            let lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + ' ' + word).trim().length > maxWidth) {
+                    lines.push(currentLine.trim());
+                    currentLine = word;
+                } else {
+                    currentLine = (currentLine + ' ' + word).trim();
+                }
+            });
+            lines.push(currentLine.trim());
+            return lines;
+        }
+
+        // Dados para o gráfico de distribuição da frota por departamento
+        const departmentData = {
+            labels: [
+                '02 - DMER - DMER',
+                'TRANSPORTE ESCOLAR',
+                '04 - LIMPEZA PUBLICA - LIMPEZA PUBLICA',
+                '01 - ADMINISTRACAO - ADMINISTRACAO',
+                '01 - SECRETARIA MUNICIPAL DE SAUDE - SECRETARIA DE SAUDE',
+                '05 - SECRETARIA DE AGRICULTURA - SECRETARIA DE AGRICULTURA',
+                '03 - SERVICOS URBANOS - SERVICOS URBANOS',
+                'Departamento/Centro Custo/Unidade',
+                'FUNDO MUNICIPAL DE EDUCAÇÃO',
+                '04 - VIGILANCIA EPIDEMIOLOGICA - VIGILANCIA EPIDEMIOLOGICA',
+                '03 - PSF - PSF',
+                'CONSELHO TUTELAR',
+                '05 - VIGILANCIA SANITARIA - VIGILANCIA SANITARIA',
+                'SECRETARIA DE ASSISTENCIA SOCIAL',
+                '08 - DEPARTAMENTO DE ESPORTES - DEPARTAMENTO DE ESPORTE - 02.879.138/0001-38'
+            ].map(l => wrapLabel(l)),
+            datasets: [{
+                label: 'Nº de Veículos por Departamento',
+                data: [13, 8, 8, 6, 6, 6, 4, 3, 2, 1, 1, 1, 1, 1, 1],
+                backgroundColor: PALETTE.blue_medium,
+                borderColor: PALETTE.blue_deep,
+                borderWidth: 1,
+                borderRadius: 4
+            }]
+        };
+
+        const ctxDepartment = document.getElementById('departmentChart').getContext('2d');
+        new Chart(ctxDepartment, {
+            type: 'bar',
+            data: {
+                labels: departmentData.labels,
+                datasets: [{
+                    label: 'Nº de Veículos por Departamento',
+                    data: departmentData.datasets[0].data,
+                    backgroundColor: PALETTE.blue_medium,
+                    borderColor: PALETTE.blue_deep,
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        grid: { color: GRID_COLOR },
+                        ticks: { 
+                            color: FONT_COLOR, 
+                            font: { size: window.innerWidth < 768 ? 10 : 12 } 
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { 
+                            color: FONT_COLOR, 
+                            font: { size: window.innerWidth < 768 ? 8 : 12 } 
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    ...tooltipPlugin
+                }
+            }
+        });
+
+        // Dados para o gráfico de ROI (exemplo)
+        const roiData = {
+            labels: ["Mês 0", "Mês 3", "Mês 6", "Mês 9", "Mês 12"],
+            datasets: [
+                {
+                    label: "Investimento Acumulado (R$)",
+                    data: [26267.80, 26267.80 + (4806.40 * 3), 26267.80 + (4806.40 * 6), 26267.80 + (4806.40 * 9), 26267.80 + (4806.40 * 12)],
+                    borderColor: "#00429d",
+                    backgroundColor: "rgba(0, 66, 157, 0.2)",
+                    fill: true,
+                    tension: 0.3
+                },
+                {
+                    label: "Economia Acumulada (R$)",
+                    data: [0, 8000 * 3, 8000 * 6, 8000 * 9, 8000 * 12],
+                    borderColor: "#28a745",
+                    backgroundColor: "rgba(40, 167, 69, 0.2)",
+                    fill: true,
+                    tension: 0.3
+                }
+            ]
+        };
+
+        const ctxRoi = document.getElementById('roiChart');
+        if (ctxRoi) {
+            new Chart(ctxRoi, {
+                type: 'line',
+                data: roiData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Projeção de ROI e Economia Acumulada',
+                            font: { size: window.innerWidth < 768 ? 14 : 16, weight: 'bold' }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        legend: {
+                            labels: {
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Meses',
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            },
+                            ticks: {
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Valor (R$)',
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            },
+                            beginAtZero: true,
+                            ticks: {
+                                font: { size: window.innerWidth < 768 ? 10 : 12 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Redimensionar gráficos quando a tela mudar de tamanho
+        window.addEventListener('resize', function() {
+            Chart.helpers.each(Chart.instances, function(instance) {
+                instance.resize();
+            });
+        });
+    </script>
+</body>
+</html>
+
